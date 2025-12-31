@@ -46,6 +46,8 @@ class GPU:
         self.monitor_interval = 5
         self.monitor_thread = self._run_monitor()
         
+        self.flash()
+        
     def flash(self):
         pynvml.nvmlInit()
         handle = pynvml.nvmlDeviceGetHandleByIndex(self.gpu_id)

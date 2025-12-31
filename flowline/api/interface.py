@@ -16,7 +16,7 @@ class CommandLineInterface(cmd.Cmd):
         try:
             with open(filename) as f:
                 lines = f.read().splitlines()
-            self.cmdqueue.extend(reversed(lines))
+            self.cmdqueue.extend(lines)
         except FileNotFoundError:
             print("No init file found")
         except OSError | PermissionError as e:
