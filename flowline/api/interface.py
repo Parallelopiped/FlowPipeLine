@@ -12,6 +12,16 @@ class CommandLineInterface(cmd.Cmd):
         super().__init__()
         self.program_manager = program_manager
         
+    def do_load(self, filename):
+        try:
+            with open(filename) as f:
+                lines = f.read().splitlines()
+            self.cmdqueue.extend(reversed(lines))
+        except FileNotFoundError:
+            print("No init file found")
+        except OSError | PermissionError as e:
+            print(f"OS error: {e}")
+        
     def do_run(self, arg):
         """switch running status: run"""
         is_run = self.program_manager.switch_run()
@@ -129,18 +139,19 @@ class CommandLineInterface(cmd.Cmd):
             print(f"{v['task_id']:<8} {v['name']:<12} {v['run_num']:<8} {v['dict']:<20}")
         print("-" * 100)
 
-def run_cli(func, task_dir=None, user_cmp=None):
+def run_cli(func, task_dir=None, user_cmp=None, init_file='./.flinit'):
     """run the command line interface"""
     program = ProgramManager(func, task_dir, user_cmp)
     cli = CommandLineInterface(program)
     try:
+        cli.do_load(init_file)
         cli.cmdloop()
     except KeyboardInterrupt:
         print("\nreceived interrupt signal, exiting...")
         sys.exit(0)
 
 if __name__ == "__main__":
-    pass
+    run_cli(None)
 
 """
     python -m flowline.interface
