@@ -96,9 +96,10 @@ class MasterServer:
     
     def _fetch_slave_info(self, slave):
         """Fetch information from a single slave"""
+        timeout = self.config.get('request_timeout', 3)
         try:
             url = f"http://{slave.ip}:{slave.port}/api/info"
-            response = requests.get(url, timeout=3)
+            response = requests.get(url, timeout=timeout)
             if response.status_code == 200:
                 slave.data = response.json()
                 slave.online = True
@@ -106,16 +107,16 @@ class MasterServer:
                 slave.error = None
             else:
                 slave.online = False
-                slave.error = f"HTTP {response.status_code}"
+                slave.error = f"HTTP {response.status_code} from {slave.name} ({slave.ip})"
         except requests.exceptions.Timeout:
             slave.online = False
-            slave.error = "Connection timeout"
+            slave.error = f"Connection timeout to {slave.name} ({slave.ip}:{slave.port})"
         except requests.exceptions.ConnectionError:
             slave.online = False
-            slave.error = "Connection refused"
+            slave.error = f"Connection refused by {slave.name} ({slave.ip}:{slave.port})"
         except Exception as e:
             slave.online = False
-            slave.error = str(e)
+            slave.error = f"Error from {slave.name}: {str(e)}"
     
     def _monitor_slaves(self):
         """Continuously monitor slave status"""

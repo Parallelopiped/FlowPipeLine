@@ -27,7 +27,9 @@ from flowline.utils import Log
 
 logger = Log(__name__)
 
-
+# Configurable constants
+CPU_MEASURE_INTERVAL = 0.1  # seconds for CPU usage measurement
+CMDLINE_MAX_ARGS = 5  # max number of cmdline arguments to display
 def get_cpu_model():
     """Get CPU model name"""
     try:
@@ -59,7 +61,7 @@ def get_system_info():
             "hostname": socket.gethostname(),
             "cpu_model": get_cpu_model(),
             "cpu_cores": os.cpu_count(),
-            "cpu_usage": psutil.cpu_percent(interval=0.1),
+            "cpu_usage": psutil.cpu_percent(interval=CPU_MEASURE_INTERVAL),
             "memory": {
                 "total": round(mem.total / (1024 ** 3), 2),  # GB
                 "used": round(mem.used / (1024 ** 3), 2),    # GB
@@ -93,7 +95,7 @@ def get_gpu_processes(handle):
                     "name": p.name(),
                     "username": p.username(),
                     "memory_mb": round(proc.usedGpuMemory / (1024 ** 2), 1) if proc.usedGpuMemory else 0,
-                    "cmdline": " ".join(p.cmdline()[:3]) if p.cmdline() else ""
+                    "cmdline": " ".join(p.cmdline()[:CMDLINE_MAX_ARGS]) if p.cmdline() else ""
                 })
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 processes.append({

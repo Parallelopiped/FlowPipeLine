@@ -1,8 +1,10 @@
-// API URL - 动态获取当前host
-const API_BASE_URL = `http://${window.location.hostname}:5000/api`;
+// API URL - 动态获取当前host，端口从URL参数或使用默认值
+const urlParams = new URLSearchParams(window.location.search);
+const API_PORT = urlParams.get('apiPort') || 5000;
+const API_BASE_URL = `http://${window.location.hostname}:${API_PORT}/api`;
 
-// 刷新间隔（毫秒）
-const REFRESH_INTERVAL = 5000;
+// 刷新间隔（毫秒），可通过URL参数配置
+const REFRESH_INTERVAL = parseInt(urlParams.get('refreshInterval')) || 5000;
 
 // Toast通知
 function showToast(message, type = 'info', duration = 3000) {
@@ -41,7 +43,7 @@ async function fetchSlaveData() {
     try {
         const response = await fetch(`${API_BASE_URL}/slaves`);
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP ${response.status} from ${API_BASE_URL}/slaves`);
         }
         return await response.json();
     } catch (error) {
