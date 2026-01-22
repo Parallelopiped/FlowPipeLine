@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowLine - 多机GPU监控系统</title>
+    <link rel="stylesheet" href="monitor.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">FlowLine Monitor</div>
+        <div class="nav-info">
+            <span id="onlineCount">在线从机: 0/0</span>
+            <span id="lastUpdate">上次更新: --</span>
+        </div>
+        <div class="header-actions">
+            <button id="refreshBtn">刷新</button>
+        </div>
+    </nav>
+    
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="container">
+        <div id="slavesContainer" class="slaves-container">
+            <!-- 从机卡片将通过JavaScript渲染 -->
+            <div class="loading">正在加载从机信息...</div>
+        </div>
+    </div>
+    
+    <script src="monitor.js"></script>
+</body>
+</html>

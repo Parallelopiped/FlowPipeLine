@@ -1,0 +1,8 @@
+{
+    "mode": "slave",
+    "master_ip": "192.168.217.190",
+    "master_port": 5000,
+    "slave_host": "0.0.0.0",
+    "slave_port": 5001,
+    "report_interval": 3
+}
