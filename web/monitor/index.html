@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowLine - 多机GPU监控系统</title>
+    <title>多节点GPU监控系统</title>
     <link rel="stylesheet" href="monitor.css">
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo">FlowLine Monitor</div>
+        <div class="logo">FlowPipeLine - 多节点GPU监控系统</div>
         <div class="nav-info">
             <span id="onlineCount">在线从机: 0/0</span>
             <span id="lastUpdate">上次更新: --</span>
@@ -17,6 +17,7 @@
             <button id="refreshBtn">刷新</button>
         </div>
     </nav>
+
     
     <div class="toast-container" id="toastContainer"></div>
 
@@ -28,5 +29,17 @@
     </div>
     
     <script src="monitor.js"></script>
+
+    <section class="promo">
+        <div class="promo-content">
+            <p class="promo-title">项目推广</p>
+            <p class="promo-description">本项目由 <a href="https://github.com/Parallelopiped/FlowPipeLine" target="_blank" rel="noreferrer">Parallelopiped/FlowPipeLine</a> 维护，基于 <a href="https://github.com/Dramwig/FlowLine" target="_blank" rel="noreferrer">Dramwig/FlowLine</a> 进行了二次开发，持续完善多机GPU监控体验。</p>
+            <div class="promo-links">
+                <a href="https://github.com/Parallelopiped/FlowPipeLine" target="_blank" rel="noreferrer">查看 Fork 项目</a>
+                <a href="https://github.com/Dramwig/FlowLine" target="_blank" rel="noreferrer">了解原始项目</a>
+            </div>
+        </div>
+    </section>
+
 </body>
 </html>

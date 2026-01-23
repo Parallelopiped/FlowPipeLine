@@ -105,10 +105,12 @@ function renderProcessList(processes) {
     return processes.map(proc => `
         <div class="process-item">
             <div class="process-info">
-                <span class="process-name">${escapeHtml(proc.name)}</span>
                 <div class="process-details">
+                    <span>进程: ${escapeHtml(proc.name)}</span>
                     <span>PID: ${proc.pid}</span>
-                    <span>用户: ${escapeHtml(proc.username)}</span>
+                    <span>容器: ${escapeHtml(proc.username)}</span>
+                    <span>运行: ${escapeHtml(proc.elapsed_time || '--')}</span>
+                    <span>启动: ${escapeHtml(proc.start_time || '--')}</span>
                     <span>显存: ${proc.memory_mb} MB</span>
                 </div>
             </div>

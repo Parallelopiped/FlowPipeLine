@@ -1,0 +1,20 @@
+[Unit]
+Description=GPU Usage Monitor Service (master)
+After=network.target
+
+[Service]
+User=lxdserver
+Group=lxdserver
+WorkingDirectory=/home/lxdserver/software/gpu-monitor-multinode
+ExecStart=/home/lxdserver/miniconda3/bin/conda run -n gpu_monitor python master.py
+Restart=always
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=gpu-monitor-master
+Environment=FLASK_APP=master.py
+Environment=FLASK_RUN_HOST=0.0.0.0
+Environment=FLASK_RUN_PORT=5000
+
+[Install]
+WantedBy=multi-user.target

@@ -14,6 +14,8 @@ import socket
 import platform
 import os
 import psutil
+import re
+import subprocess
 from flask import Flask, jsonify
 from flask_cors import CORS
 
@@ -30,6 +32,40 @@ logger = Log(__name__)
 # Configurable constants
 CPU_MEASURE_INTERVAL = 0.1  # seconds for CPU usage measurement
 CMDLINE_MAX_ARGS = 5  # max number of cmdline arguments to display
+
+
+def get_container_name(pid):
+    """Get container name by reading /proc/<pid>/cgroup"""
+    try:
+        with open(f"/proc/{pid}/cgroup", "r") as f:
+            for line in f:
+                match = re.search(r"/lxc\.payload\.([^/]+)", line)
+                if match:
+                    return match.group(1)
+    except Exception:
+        return "Unknown"
+    return "Host Process"
+
+
+def get_process_runtime(pid):
+    """Get process start time and elapsed time"""
+    try:
+        cmd = f"ps -p {pid} -o lstart,etime --no-headers"
+        result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if result.returncode != 0:
+            return {"start_time": "N/A", "elapsed_time": "N/A"}
+
+        line = result.stdout.strip()
+        if not line:
+            return {"start_time": "N/A", "elapsed_time": "N/A"}
+
+        start_time, elapsed_time = line.rsplit(maxsplit=1)
+        return {
+            "start_time": start_time,
+            "elapsed_time": elapsed_time
+        }
+    except Exception:
+        return {"start_time": "Error", "elapsed_time": "Error"}
 def get_cpu_model():
     """Get CPU model name"""
     try:
@@ -90,10 +126,13 @@ def get_gpu_processes(handle):
         for proc in proc_infos:
             try:
                 p = psutil.Process(proc.pid)
+                runtime = get_process_runtime(proc.pid)
                 processes.append({
                     "pid": proc.pid,
                     "name": p.name(),
-                    "username": p.username(),
+                    "username": get_container_name(proc.pid),
+                    "start_time": runtime.get("start_time", "N/A"),
+                    "elapsed_time": runtime.get("elapsed_time", "N/A"),
                     "memory_mb": round(proc.usedGpuMemory / (1024 ** 2), 1) if proc.usedGpuMemory else 0,
                     "cmdline": " ".join(p.cmdline()[:CMDLINE_MAX_ARGS]) if p.cmdline() else ""
                 })
@@ -102,6 +141,8 @@ def get_gpu_processes(handle):
                     "pid": proc.pid,
                     "name": "Unknown",
                     "username": "Unknown",
+                    "start_time": "N/A",
+                    "elapsed_time": "N/A",
                     "memory_mb": round(proc.usedGpuMemory / (1024 ** 2), 1) if proc.usedGpuMemory else 0,
                     "cmdline": ""
                 })

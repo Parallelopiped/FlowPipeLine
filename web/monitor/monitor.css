@@ -27,6 +27,63 @@ body {
     z-index: 100;
 }
 
+.promo {
+    margin: 20px auto;
+    max-width: 1100px;
+    background: linear-gradient(135deg, #ff9481b6, #fcc18998);
+    border-radius: 16px;
+    color: white;
+    padding: 22px;
+    box-shadow: 0 18px 30px rgba(15, 23, 42, 0.35);
+}
+
+.promo-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.promo-title {
+    font-size: 1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #35465a;
+    margin-bottom: 4px;
+}
+
+.promo-description {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #4c4e56;
+}
+
+.promo-description a {
+    color: #6e8d72;
+    text-decoration: underline;
+}
+
+.promo-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.promo-links a {
+    background-color: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 0.85rem;
+    color: white;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.promo-links a:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
 .logo {
     font-size: 1.5rem;
     font-weight: 600;
@@ -221,8 +278,12 @@ body {
 .gpu-list {
     padding: 20px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
+}
+
+.gpu-list > .gpu-card:only-child {
+    grid-column: 1 / -1;
 }
 
 .gpu-card {
@@ -424,5 +485,11 @@ body {
     
     .system-info {
         grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1100px) {
+    .gpu-list {
+        grid-template-columns: 1fr;
     }
 }

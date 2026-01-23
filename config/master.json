@@ -5,15 +5,15 @@
     "web_port": 8000,
     "slaves": [
         {
-            "name": "Slave-1",
+            "name": "Node-1",
             "ip": "192.168.217.180"
         },
         {
-            "name": "Slave-2",
+            "name": "Node-2",
             "ip": "192.168.217.190"
         },
         {
-            "name": "Slave-3",
+            "name": "Node-3",
             "ip": "192.168.217.200"
         }
     ],
