@@ -140,13 +140,14 @@ def get_system_info():
         # Memory info
         mem = psutil.virtual_memory()
         swap = psutil.swap_memory()
+        cpu_usage = psutil.cpu_percent(interval=CPU_MEASURE_INTERVAL)
         cpu_temps = get_cpu_temperatures()
         
         system_info = {
             "hostname": socket.gethostname(),
             "cpu_model": get_cpu_model(),
             "cpu_cores": os.cpu_count(),
-            "cpu_usage": psutil.cpu_percent(interval=CPU_MEASURE_INTERVAL),
+            "cpu_usage": cpu_usage,
             "cpu_temperature": cpu_temps,
             "memory": {
                 "total": round(mem.total / (1024 ** 3), 2),  # GB
