@@ -86,18 +86,69 @@ def get_cpu_model():
         return "Unknown CPU"
 
 
+def get_cpu_temperatures():
+    """Get CPU package temperature and hottest core temperature (Celsius)."""
+    try:
+        temps = psutil.sensors_temperatures()
+        if not temps:
+            return {"package": None, "core_max": None}
+    except Exception as e:
+        logger.error(f"Error getting CPU temperatures: {e}")
+        return {"package": None, "core_max": None}
+
+    package_candidates = []
+    core_candidates = []
+    all_candidates = []
+    package_keywords = (
+        "package",  # Common package temperature label
+        "cpu package",  # Alternative package label
+        "tctl",  # AMD Ryzen control temperature
+        "tdie",  # AMD Ryzen die temperature
+        "soc"  # SoC temperature on some platforms
+    )
+
+    for sensor_name, entries in temps.items():
+        sensor_name_lower = (sensor_name or "").lower()
+        for entry in entries:
+            current = entry.current
+            if current is None:
+                continue
+            current = round(current, 1)
+            label = (entry.label or "").lower()
+            combined = f"{sensor_name_lower} {label}"
+
+            all_candidates.append(current)
+            if "core" in combined:
+                core_candidates.append(current)
+            if any(keyword in combined for keyword in package_keywords):
+                package_candidates.append(current)
+
+    package_temp = max(package_candidates) if package_candidates else None
+    core_max_temp = max(core_candidates) if core_candidates else None
+
+    if package_temp is None and all_candidates:
+        package_temp = max(all_candidates)
+    if core_max_temp is None and all_candidates:
+        core_max_temp = max(all_candidates)
+
+    return {"package": package_temp, "core_max": core_max_temp}
+
+
 def get_system_info():
     """Collect system information"""
     try:
         # Memory info
         mem = psutil.virtual_memory()
         swap = psutil.swap_memory()
+        cpu_usage = psutil.cpu_percent(interval=CPU_MEASURE_INTERVAL)
+        cpu_temps = get_cpu_temperatures()
         
         system_info = {
             "hostname": socket.gethostname(),
             "cpu_model": get_cpu_model(),
             "cpu_cores": os.cpu_count(),
-            "cpu_usage": psutil.cpu_percent(interval=CPU_MEASURE_INTERVAL),
+            "cpu_usage": cpu_usage,
+            "cpu_temperature": cpu_temps,
             "memory": {
                 "total": round(mem.total / (1024 ** 3), 2),  # GB
                 "used": round(mem.used / (1024 ** 3), 2),    # GB
