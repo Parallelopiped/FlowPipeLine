@@ -99,7 +99,13 @@ def get_cpu_temperatures():
     package_candidates = []
     core_candidates = []
     all_candidates = []
-    package_keywords = ("package", "tctl", "tdie", "cpu package", "soc")
+    package_keywords = (
+        "package",  # Common package temperature label
+        "cpu package",  # Alternative package label
+        "tctl",  # AMD Ryzen control temperature
+        "tdie",  # AMD Ryzen die temperature
+        "soc"  # SoC temperature on some platforms
+    )
 
     for sensor_name, entries in temps.items():
         sensor_name_lower = (sensor_name or "").lower()
@@ -117,8 +123,13 @@ def get_cpu_temperatures():
             if any(keyword in combined for keyword in package_keywords):
                 package_candidates.append(current)
 
-    package_temp = max(package_candidates) if package_candidates else (max(all_candidates) if all_candidates else None)
-    core_max_temp = max(core_candidates) if core_candidates else (max(all_candidates) if all_candidates else None)
+    package_temp = max(package_candidates) if package_candidates else None
+    core_max_temp = max(core_candidates) if core_candidates else None
+
+    if package_temp is None and all_candidates:
+        package_temp = max(all_candidates)
+    if core_max_temp is None and all_candidates:
+        core_max_temp = max(all_candidates)
 
     return {"package": package_temp, "core_max": core_max_temp}
 
