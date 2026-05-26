@@ -126,7 +126,7 @@ http://<从机IP>:5001/api/info
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4",
     "cpu_cores": 28,
     "cpu_usage": 12.5,
-    "cpu_temperature": {"package": 55.2, "core_max": 62.1},
+    "cpu_temperature": {"package": 55.2},
     "memory": {"total": 128.0, "used": 45.2, "percent": 35.3},
     "swap": {"total": 16.0, "used": 2.1, "percent": 13.1}
   },
