@@ -87,17 +87,16 @@ def get_cpu_model():
 
 
 def get_cpu_temperatures():
-    """Get CPU package temperature and hottest core temperature (Celsius)."""
+    """Get CPU package temperature (Celsius)."""
     try:
         temps = psutil.sensors_temperatures()
         if not temps:
-            return {"package": None, "core_max": None}
+            return {"package": None}
     except Exception as e:
         logger.error(f"Error getting CPU temperatures: {e}")
-        return {"package": None, "core_max": None}
+        return {"package": None}
 
     package_candidates = []
-    core_candidates = []
     all_candidates = []
     package_keywords = (
         "package",  # Common package temperature label
@@ -118,20 +117,15 @@ def get_cpu_temperatures():
             combined = f"{sensor_name_lower} {label}"
 
             all_candidates.append(current)
-            if "core" in combined:
-                core_candidates.append(current)
             if any(keyword in combined for keyword in package_keywords):
                 package_candidates.append(current)
 
     package_temp = max(package_candidates) if package_candidates else None
-    core_max_temp = max(core_candidates) if core_candidates else None
 
     if package_temp is None and all_candidates:
         package_temp = max(all_candidates)
-    if core_max_temp is None and all_candidates:
-        core_max_temp = max(all_candidates)
 
-    return {"package": package_temp, "core_max": core_max_temp}
+    return {"package": package_temp}
 
 
 def get_system_info():

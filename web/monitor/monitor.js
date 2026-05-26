@@ -65,7 +65,6 @@ function renderSystemInfo(system) {
     const swapPercent = system.swap?.percent || 0;
     const cpuTemps = system.cpu_temperature || {};
     const packageTemp = formatTemperature(cpuTemps.package);
-    const coreMaxTemp = formatTemperature(cpuTemps.core_max);
     
     return `
         <div class="system-info">
@@ -81,7 +80,7 @@ function renderSystemInfo(system) {
                 <span class="system-label">CPU</span>
                 <span class="system-value small">${system.cpu_model || 'Unknown'}</span>
                 <span class="system-value small">${system.cpu_cores || 0} 核心 | ${system.cpu_usage || 0}% 使用率</span>
-                <span class="system-value small">封装 ${packageTemp} | 最热核心 ${coreMaxTemp}</span>
+                <span class="system-value small">封装 ${packageTemp}</span>
             </div>
             <div class="system-item">
                 <span class="system-label">内存</span>
