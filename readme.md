@@ -15,7 +15,7 @@ FlowLine Monitor 是一个基于 **主从架构（Master-Slave）** 的多机GPU
 * **主从架构**：支持一台主机管理多台从机的GPU监控
 * **实时监控**：实时显示GPU使用率、显存、温度、功耗等信息
 * **进程列表**：显示每个GPU上运行的进程详情
-* **系统信息**：显示每台从机的CPU型号、内存使用量、Swap使用量
+* **系统信息**：显示每台从机的CPU型号、使用率、温度、内存使用量、Swap使用量
 * **分区展示**：每台从机独立分区显示，便于监控管理
 * **自动刷新**：支持自动定时刷新和手动刷新
 
@@ -125,6 +125,8 @@ http://<从机IP>:5001/api/info
     "hostname": "gpu-server-1",
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4",
     "cpu_cores": 28,
+    "cpu_usage": 12.5,
+    "cpu_temperature": {"package": 55.2, "core_max": 62.1},
     "memory": {"total": 128.0, "used": 45.2, "percent": 35.3},
     "swap": {"total": 16.0, "used": 2.1, "percent": 13.1}
   },
